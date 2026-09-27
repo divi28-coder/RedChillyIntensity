@@ -1,0 +1,110 @@
+{
+    "Brick powder normal sample": {
+        "red": 164.9803151097791,
+        "green": 104.03660636112608,
+        "blue": 69.9944963126347,
+        "brightness": 113.00380548937568,
+        "saturation": 38.19153779128502,
+        "red_dominance": 48.704260464372304,
+        "sample_count": 29
+    },
+    "Red chilli powder normal Sample": {
+        "red": 180.15707397460938,
+        "green": 74.3139147077288,
+        "blue": 51.36591230119978,
+        "brightness": 101.94563293457031,
+        "saturation": 51.838568687438965,
+        "red_dominance": 59.0786452974592,
+        "sample_count": 28
+    },
+    "Red chilli powder with 10_ brick powder": {
+        "red": 178.35504368373327,
+        "green": 83.98924255371094,
+        "blue": 55.08589172363281,
+        "brightness": 105.81005941118512,
+        "saturation": 49.55569246837071,
+        "red_dominance": 56.26550429207938,
+        "sample_count": 28
+    },
+    "Red chilli powder with 15_ brick powder": {
+        "red": 177.3228040422712,
+        "green": 88.45713806152344,
+        "blue": 59.07029506138393,
+        "brightness": 108.28341238839286,
+        "saturation": 47.749854632786345,
+        "red_dominance": 54.67217690604074,
+        "sample_count": 28
+    },
+    "Red chilli powder with 20_ brick powder": {
+        "red": 176.35845293317522,
+        "green": 82.54731096540179,
+        "blue": 49.25054277692522,
+        "brightness": 102.71876852852958,
+        "saturation": 51.11895343235561,
+        "red_dominance": 57.35746683393206,
+        "sample_count": 28
+    },
+    "Red chilli powder with 25_ brick powder": {
+        "red": 182.60855538504464,
+        "green": 84.39578247070312,
+        "blue": 44.30520411900112,
+        "brightness": 103.76984759739467,
+        "saturation": 54.774799483163015,
+        "red_dominance": 58.76478345053537,
+        "sample_count": 28
+    },
+    "Red chilli powder with 30_ brick powder": {
+        "red": 176.68230329241072,
+        "green": 87.658689226423,
+        "blue": 54.57641165597098,
+        "brightness": 106.30580166407994,
+        "saturation": 48.69280392783029,
+        "red_dominance": 55.53785637446812,
+        "sample_count": 28
+    },
+    "Red chilli powder with 35_ brick powder": {
+        "red": 180.41528974260603,
+        "green": 83.12660217285156,
+        "blue": 46.53292192731585,
+        "brightness": 103.35827146257672,
+        "saturation": 53.33343233380999,
+        "red_dominance": 58.33678981236049,
+        "sample_count": 28
+    },
+    "Red chilli powder with 40_ brick powder": {
+        "red": 180.91915457589286,
+        "green": 89.67485918317523,
+        "blue": 44.23030526297433,
+        "brightness": 104.94143949236188,
+        "saturation": 54.21580083029611,
+        "red_dominance": 57.54841136932373,
+        "sample_count": 28
+    },
+    "Red chilli powder with 45_ brick powder": {
+        "red": 179.23726981026786,
+        "green": 88.31896536690849,
+        "blue": 51.468981061662944,
+        "brightness": 106.34173910958427,
+        "saturation": 50.88928549630301,
+        "red_dominance": 56.39782101767404,
+        "sample_count": 28
+    },
+    "Red chilli powder with 50_ brick powder": {
+        "red": 179.01863752092635,
+        "green": 89.253173828125,
+        "blue": 53.02243259974888,
+        "brightness": 107.09808158874512,
+        "saturation": 50.17651435307094,
+        "red_dominance": 55.796573638916016,
+        "sample_count": 28
+    },
+    "Red chilli powder with 5_ brick powder": {
+        "red": 180.7453831263951,
+        "green": 73.54041617257255,
+        "blue": 39.16837419782366,
+        "brightness": 97.81805774143764,
+        "saturation": 56.22561114174979,
+        "red_dominance": 61.77095930916922,
+        "sample_count": 28
+    }
+}

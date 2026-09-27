@@ -1,0 +1,1979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Chilli Powder Colour Intelligence</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff7f2,
+                    #fff,
+                    #fff3ed
+                );
+
+            color: #252525;
+            min-height: 100vh;
+        }
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .header {
+            background:
+                linear-gradient(
+                    135deg,
+                    #8b0000,
+                    #c62828
+                );
+
+            color: white;
+            padding: 28px 20px;
+            text-align: center;
+
+            box-shadow:
+                0 4px 18px
+                rgba(0, 0, 0, 0.15);
+        }
+
+        .header h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 15px;
+            opacity: 0.92;
+        }
+
+        /* =====================================================
+           MAIN CONTAINER
+        ===================================================== */
+
+        .container {
+            width: 94%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        /* =====================================================
+           CARD
+        ===================================================== */
+
+        .card {
+            background: white;
+
+            border-radius: 18px;
+
+            padding: 24px;
+
+            margin-bottom: 22px;
+
+            box-shadow:
+                0 8px 28px
+                rgba(0, 0, 0, 0.08);
+
+            border:
+                1px solid #eeeeee;
+        }
+
+        .card-title {
+            font-size: 21px;
+            font-weight: 700;
+
+            margin-bottom: 18px;
+
+            color: #8b0000;
+        }
+
+        /* =====================================================
+           UPLOAD AREA
+        ===================================================== */
+
+        .upload-area {
+            border:
+                2px dashed #c62828;
+
+            border-radius: 16px;
+
+            padding: 30px 20px;
+
+            text-align: center;
+
+            background: #fffafa;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .upload-area h2 {
+            font-size: 21px;
+            margin-bottom: 8px;
+        }
+
+        .upload-area p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        /* =====================================================
+           BUTTONS
+        ===================================================== */
+
+        .button-row {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+
+            border-radius: 10px;
+
+            padding: 13px 22px;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.15s,
+                box-shadow 0.15s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 5px 14px
+                rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-camera {
+            background: #8b0000;
+            color: white;
+        }
+
+        .btn-upload {
+            background: #eeeeee;
+            color: #333333;
+        }
+
+        .btn-analyze {
+            background: #c62828;
+            color: white;
+
+            padding:
+                14px 34px;
+
+            margin-top: 18px;
+        }
+
+        .btn-analyze:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+
+            transform: none;
+
+            box-shadow: none;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        /* =====================================================
+           CAMERA
+        ===================================================== */
+
+        .camera-box {
+            display: none;
+
+            margin-top: 20px;
+
+            text-align: center;
+        }
+
+        .camera-box video {
+            width: 100%;
+            max-width: 550px;
+
+            border-radius: 14px;
+
+            background: #111;
+
+            box-shadow:
+                0 5px 18px
+                rgba(0, 0, 0, 0.15);
+        }
+
+        .camera-controls {
+            margin-top: 12px;
+        }
+
+        .camera-message {
+            color: #666;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        /* =====================================================
+           IMAGE PREVIEW
+        ===================================================== */
+
+        .preview-box {
+            display: none;
+
+            text-align: center;
+
+            margin-top: 22px;
+        }
+
+        .preview-box img {
+            max-width: 100%;
+            max-height: 400px;
+
+            border-radius: 14px;
+
+            object-fit: contain;
+
+            border:
+                1px solid #dddddd;
+        }
+
+        .file-name {
+            margin-top: 10px;
+
+            color: #666;
+
+            font-size: 14px;
+        }
+
+        /* =====================================================
+           ERROR
+        ===================================================== */
+
+        .error-box {
+            background: #ffebee;
+
+            border-left:
+                5px solid #c62828;
+
+            color: #b71c1c;
+
+            padding: 15px 18px;
+
+            border-radius: 8px;
+
+            margin-bottom: 20px;
+
+            font-weight: 600;
+        }
+
+        /* =====================================================
+           RESULT GRID
+        ===================================================== */
+
+        .result-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(220px, 1fr)
+                );
+
+            gap: 16px;
+        }
+
+        /* =====================================================
+           METRIC CARD
+        ===================================================== */
+
+        .metric {
+            background:
+                linear-gradient(
+                    145deg,
+                    #fff,
+                    #fff8f5
+                );
+
+            border:
+                1px solid #eeeeee;
+
+            border-radius: 14px;
+
+            padding: 20px;
+
+            min-height: 140px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: space-between;
+        }
+
+        .metric-label {
+            color: #777;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-size: 30px;
+
+            font-weight: 800;
+
+            color: #8b0000;
+
+            margin:
+                8px 0;
+        }
+
+        .metric-unit {
+            color: #888;
+
+            font-size: 13px;
+        }
+
+        /* =====================================================
+           RGB CARDS
+        ===================================================== */
+
+        .rgb-card {
+            position: relative;
+
+            overflow: hidden;
+        }
+
+        .rgb-indicator {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 50%;
+
+            margin-bottom: 8px;
+
+            border:
+                2px solid #ddd;
+        }
+
+        .red-indicator {
+            background: rgb(220, 40, 40);
+        }
+
+        .green-indicator {
+            background: rgb(40, 170, 70);
+        }
+
+        .blue-indicator {
+            background: rgb(55, 100, 220);
+        }
+
+        /* =====================================================
+           COLOUR PREVIEW
+        ===================================================== */
+
+        .colour-display {
+            display: flex;
+
+            align-items: center;
+
+            gap: 22px;
+
+            flex-wrap: wrap;
+        }
+
+        .colour-swatch {
+            width: 130px;
+            height: 130px;
+
+            border-radius: 18px;
+
+            border:
+                3px solid white;
+
+            box-shadow:
+                0 4px 16px
+                rgba(0, 0, 0, 0.2);
+        }
+
+        .colour-info {
+            flex: 1;
+
+            min-width: 230px;
+        }
+
+        .colour-info h3 {
+            margin-bottom: 12px;
+
+            color: #8b0000;
+        }
+
+        .colour-info p {
+            margin-bottom: 7px;
+
+            color: #555;
+        }
+
+        /* =====================================================
+           BEST MATCH
+        ===================================================== */
+
+        .best-match {
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff5f0,
+                    #ffffff
+                );
+
+            border:
+                2px solid #c62828;
+
+            border-radius: 16px;
+
+            padding: 22px;
+
+            text-align: center;
+
+            margin-bottom: 20px;
+        }
+
+        .best-match-label {
+            color: #777;
+
+            font-size: 14px;
+
+            margin-bottom: 8px;
+        }
+
+        .best-match-name {
+            color: #8b0000;
+
+            font-size: 26px;
+
+            font-weight: 800;
+
+            margin-bottom: 10px;
+        }
+
+        .best-match-score {
+            font-size: 40px;
+
+            font-weight: 900;
+
+            color: #c62828;
+        }
+
+        /* =====================================================
+           MATCH TABLE
+        ===================================================== */
+
+        .match-table-wrapper {
+            overflow-x: auto;
+        }
+
+        .match-table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 500px;
+        }
+
+        .match-table th {
+            background: #8b0000;
+
+            color: white;
+
+            padding: 13px;
+
+            text-align: left;
+        }
+
+        .match-table td {
+            padding: 13px;
+
+            border-bottom:
+                1px solid #eeeeee;
+        }
+
+        .match-table tr:nth-child(even) {
+            background: #fff8f5;
+        }
+
+        .percentage {
+            font-weight: 800;
+
+            color: #c62828;
+        }
+
+        /* =====================================================
+           PROGRESS BAR
+        ===================================================== */
+
+        .progress {
+            width: 100%;
+
+            height: 9px;
+
+            background: #eeeeee;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            margin-top: 8px;
+        }
+
+        .progress-bar {
+            height: 100%;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #ff7043,
+                    #b71c1c
+                );
+
+            border-radius: 20px;
+        }
+
+        /* =====================================================
+           FEATURE DESCRIPTION
+        ===================================================== */
+
+        .feature-description {
+            color: #666;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+
+            margin-top: 5px;
+        }
+
+        /* =====================================================
+           INFO BOX
+        ===================================================== */
+
+        .info-box {
+            background: #f5f7fa;
+
+            border-left:
+                5px solid #607d8b;
+
+            padding: 17px;
+
+            border-radius: 8px;
+
+            line-height: 1.6;
+
+            color: #555;
+        }
+
+        /* =====================================================
+           LOADING
+        ===================================================== */
+
+        .loading {
+            display: none;
+
+            text-align: center;
+
+            padding: 20px;
+        }
+
+        .spinner {
+            width: 38px;
+            height: 38px;
+
+            border:
+                4px solid #eeeeee;
+
+            border-top:
+                4px solid #c62828;
+
+            border-radius: 50%;
+
+            animation:
+                spin 0.8s linear infinite;
+
+            margin:
+                0 auto 12px;
+        }
+
+        @keyframes spin {
+
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+
+        }
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .footer {
+            text-align: center;
+
+            padding: 25px;
+
+            color: #777;
+
+            font-size: 13px;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 600px) {
+
+            .header h1 {
+                font-size: 23px;
+            }
+
+            .container {
+                width: 96%;
+                margin-top: 18px;
+            }
+
+            .card {
+                padding: 17px;
+            }
+
+            .metric-value {
+                font-size: 25px;
+            }
+
+            .colour-swatch {
+                width: 100px;
+                height: 100px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="header">
+
+    <h1>
+        🌶️ Chilli Powder Colour Intelligence
+    </h1>
+
+    <p>
+        AI-assisted visual colour and pattern analysis
+    </p>
+
+</header>
+
+
+<main class="container">
+
+
+<!-- =========================================================
+     ERROR
+========================================================= -->
+
+{% if error %}
+
+<div class="error-box">
+
+    ⚠️ {{ error }}
+
+</div>
+
+{% endif %}
+
+
+<!-- =========================================================
+     IMAGE INPUT
+========================================================= -->
+
+<div class="card">
+
+    <div class="card-title">
+        📷 Analyse Chilli Powder Image
+    </div>
+
+
+    <div class="upload-area">
+
+        <div class="upload-icon">
+            🌶️
+        </div>
+
+        <h2>
+            Upload or Capture an Image
+        </h2>
+
+        <p>
+            Use a clear image of the chilli powder
+            under normal lighting.
+        </p>
+
+
+        <div class="button-row">
+
+            <!-- CAMERA BUTTON -->
+
+            <button
+                type="button"
+                class="btn btn-camera"
+                onclick="openCamera()"
+            >
+                📷 Open Camera
+            </button>
+
+
+            <!-- FILE BUTTON -->
+
+            <button
+                type="button"
+                class="btn btn-upload"
+                onclick="document.getElementById('imageInput').click()"
+            >
+                🖼️ Upload Image
+            </button>
+
+        </div>
+
+
+        <!-- FILE FORM -->
+
+        <form
+            id="analysisForm"
+            action="/analyze"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            <input
+                id="imageInput"
+                type="file"
+                name="image"
+                accept="image/jpeg,image/png,image/webp"
+                onchange="handleFileSelect(this)"
+            >
+
+
+            <!-- CAMERA -->
+
+            <div
+                id="cameraBox"
+                class="camera-box"
+            >
+
+                <video
+                    id="cameraVideo"
+                    autoplay
+                    playsinline
+                ></video>
+
+                <div class="camera-controls">
+
+                    <button
+                        type="button"
+                        class="btn btn-camera"
+                        onclick="captureImage()"
+                    >
+                        📸 Capture Image
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-upload"
+                        onclick="closeCamera()"
+                    >
+                        ✖ Close Camera
+                    </button>
+
+                </div>
+
+                <p
+                    id="cameraMessage"
+                    class="camera-message"
+                ></p>
+
+            </div>
+
+
+            <!-- CAMERA CAPTURE CANVAS -->
+
+            <canvas
+                id="captureCanvas"
+                style="display:none;"
+            ></canvas>
+
+
+            <!-- PREVIEW -->
+
+            <div
+                id="previewBox"
+                class="preview-box"
+            >
+
+                <img
+                    id="previewImage"
+                    alt="Selected chilli powder image"
+                >
+
+                <div
+                    id="fileName"
+                    class="file-name"
+                ></div>
+
+            </div>
+
+
+            <button
+                id="analyzeButton"
+                type="submit"
+                class="btn btn-analyze"
+                disabled
+            >
+                🔍 Analyse Colour Pattern
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- LOADING -->
+
+    <div
+        id="loading"
+        class="loading"
+    >
+
+        <div class="spinner"></div>
+
+        <strong>
+            Analysing image...
+        </strong>
+
+        <p>
+            Extracting RGB values and matching
+            colour patterns.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     RESULTS
+========================================================= -->
+
+{% if image_uploaded %}
+
+
+<!-- =========================================================
+     ANALYSED SAMPLE
+========================================================= -->
+
+<div class="card">
+
+    <div class="card-title">
+        🔎 Analysed Sample
+    </div>
+
+    <div class="info-box">
+
+        The uploaded image has been analysed using
+        its visual colour characteristics and the
+        colour patterns learned from the dataset.
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     EXTRACTED COLOUR
+========================================================= -->
+
+<div class="card">
+
+    <div class="card-title">
+        🎨 Extracted Sample Colour
+    </div>
+
+
+    <div class="colour-display">
+
+        <div
+            id="sampleSwatch"
+            class="colour-swatch"
+            style="
+                background:
+                rgb(
+                    {{ features.red|round(0)|int }},
+                    {{ features.green|round(0)|int }},
+                    {{ features.blue|round(0)|int }}
+                );
+            "
+        ></div>
+
+
+        <div class="colour-info">
+
+            <h3>
+                Sample RGB Colour
+            </h3>
+
+            <p>
+                <strong>Red:</strong>
+                {{ "%.2f"|format(features.red) }}
+            </p>
+
+            <p>
+                <strong>Green:</strong>
+                {{ "%.2f"|format(features.green) }}
+            </p>
+
+            <p>
+                <strong>Blue:</strong>
+                {{ "%.2f"|format(features.blue) }}
+            </p>
+
+            <p>
+                <strong>RGB:</strong>
+
+                (
+                {{ "%.2f"|format(features.red) }},
+                {{ "%.2f"|format(features.green) }},
+                {{ "%.2f"|format(features.blue) }}
+                )
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     VISUAL SAMPLE CHARACTERISTICS
+========================================================= -->
+
+<div class="card">
+
+    <div class="card-title">
+        🔬 Visual Sample Characteristics
+    </div>
+
+
+    <div class="result-grid">
+
+
+        <!-- RED -->
+
+        <div class="metric rgb-card">
+
+            <div>
+
+                <div
+                    class="rgb-indicator red-indicator"
+                ></div>
+
+                <div class="metric-label">
+                    🔴 Red Channel
+                </div>
+
+            </div>
+
+            <div class="metric-value">
+                {{ "%.2f"|format(features.red) }}
+            </div>
+
+            <div class="metric-unit">
+                Average pixel value
+            </div>
+
+        </div>
+
+
+        <!-- GREEN -->
+
+        <div class="metric rgb-card">
+
+            <div>
+
+                <div
+                    class="rgb-indicator green-indicator"
+                ></div>
+
+                <div class="metric-label">
+                    🟢 Green Channel
+                </div>
+
+            </div>
+
+            <div class="metric-value">
+                {{ "%.2f"|format(features.green) }}
+            </div>
+
+            <div class="metric-unit">
+                Average pixel value
+            </div>
+
+        </div>
+
+
+        <!-- BLUE -->
+
+        <div class="metric rgb-card">
+
+            <div>
+
+                <div
+                    class="rgb-indicator blue-indicator"
+                ></div>
+
+                <div class="metric-label">
+                    🔵 Blue Channel
+                </div>
+
+            </div>
+
+            <div class="metric-value">
+                {{ "%.2f"|format(features.blue) }}
+            </div>
+
+            <div class="metric-unit">
+                Average pixel value
+            </div>
+
+        </div>
+
+
+        <!-- BRIGHTNESS -->
+
+        <div class="metric">
+
+            <div class="metric-label">
+                💡 Brightness
+            </div>
+
+            <div class="metric-value">
+                {{ "%.2f"|format(features.brightness) }}
+            </div>
+
+            <div class="metric-unit">
+                Average RGB brightness
+            </div>
+
+        </div>
+
+
+        <!-- INTENSITY -->
+
+        <div class="metric">
+
+            <div class="metric-label">
+                🎨 Colour Intensity
+            </div>
+
+            <div class="metric-value">
+                {{ "%.2f"|format(features.intensity) }}%
+            </div>
+
+            <div class="metric-unit">
+                Channel colour separation
+            </div>
+
+        </div>
+
+
+        <!-- RED DOMINANCE -->
+
+        <div class="metric">
+
+            <div class="metric-label">
+                🔴 Red Dominance
+            </div>
+
+            <div class="metric-value">
+                {{ "%.2f"|format(features.red_dominance) }}%
+            </div>
+
+            <div class="metric-unit">
+                Red contribution to RGB
+            </div>
+
+        </div>
+
+
+        <!-- IMAGE SIZE -->
+
+        {% if features.width is defined %}
+
+        <div class="metric">
+
+            <div class="metric-label">
+                📐 Image Size
+            </div>
+
+            <div class="metric-value">
+
+                {{ features.width }}
+                ×
+                {{ features.height }}
+
+            </div>
+
+            <div class="metric-unit">
+                Original image dimensions
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- IMAGE QUALITY -->
+
+        {% if features.quality is defined %}
+
+        <div class="metric">
+
+            <div class="metric-label">
+                📷 Image Quality
+            </div>
+
+            <div class="metric-value">
+                {{ features.quality }}
+            </div>
+
+            <div class="metric-unit">
+                Based on image resolution
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     COLOUR PATTERN INTELLIGENCE
+========================================================= -->
+
+<div class="card">
+
+    <div class="card-title">
+        🎨 Colour Pattern Intelligence
+    </div>
+
+
+    {% if colour_match %}
+
+
+        <!-- BEST MATCH -->
+
+        <div class="best-match">
+
+            <div class="best-match-label">
+                🏆 Best Matching Dataset Colour Pattern
+            </div>
+
+            <div class="best-match-name">
+
+                {{ colour_match.best_match }}
+
+            </div>
+
+            <div class="best-match-score">
+
+                {{ "%.2f"|format(colour_match.confidence) }}%
+
+            </div>
+
+            <div class="feature-description">
+
+                Visual colour-pattern similarity
+                between the uploaded sample and
+                the closest dataset pattern.
+
+            </div>
+
+        </div>
+
+
+        <!-- MATCH TABLE -->
+
+        {% if colour_match.matches %}
+
+        <div class="match-table-wrapper">
+
+            <table class="match-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Rank
+                        </th>
+
+                        <th>
+                            Colour Pattern
+                        </th>
+
+                        <th>
+                            Match
+                        </th>
+
+                        <th>
+                            Visual Similarity
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for item in colour_match.matches %}
+
+                    <tr>
+
+                        <td>
+                            #{{ loop.index }}
+                        </td>
+
+                        <td>
+                            {{ item.name }}
+                        </td>
+
+                        <td>
+                            {{ "%.2f"|format(item.confidence) }}%
+                        </td>
+
+                        <td>
+
+                            <span class="percentage">
+
+                                {{ "%.2f"|format(item.confidence) }}%
+
+                            </span>
+
+                            <div class="progress">
+
+                                <div
+                                    class="progress-bar"
+                                    style="
+                                        width:
+                                        {{ item.confidence }}%;
+                                    "
+                                ></div>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% endif %}
+
+
+    {% else %}
+
+        <div class="info-box">
+
+            Colour pattern comparison data is
+            not available.
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- =========================================================
+     RGB + COLOUR SUMMARY
+========================================================= -->
+
+<div class="card">
+
+    <div class="card-title">
+        📊 Colour Analysis Summary
+    </div>
+
+
+    <div class="result-grid">
+
+
+        <div class="metric">
+
+            <div class="metric-label">
+                RGB Red
+            </div>
+
+            <div class="metric-value">
+                {{ "%.2f"|format(features.red) }}
+            </div>
+
+            <div class="progress">
+
+                <div
+                    class="progress-bar"
+                    style="
+                        width:
+                        {{ features.red }}%;
+                    "
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <div class="metric">
+
+            <div class="metric-label">
+                RGB Green
+            </div>
+
+            <div class="metric-value">
+                {{ "%.2f"|format(features.green) }}
+            </div>
+
+            <div class="progress">
+
+                <div
+                    class="progress-bar"
+                    style="
+                        width:
+                        {{ features.green }}%;
+                    "
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <div class="metric">
+
+            <div class="metric-label">
+                RGB Blue
+            </div>
+
+            <div class="metric-value">
+                {{ "%.2f"|format(features.blue) }}
+            </div>
+
+            <div class="progress">
+
+                <div
+                    class="progress-bar"
+                    style="
+                        width:
+                        {{ features.blue }}%;
+                    "
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <div class="metric">
+
+            <div class="metric-label">
+                Colour Intensity
+            </div>
+
+            <div class="metric-value">
+                {{ "%.2f"|format(features.intensity) }}%
+            </div>
+
+            <div class="progress">
+
+                <div
+                    class="progress-bar"
+                    style="
+                        width:
+                        {{ features.intensity }}%;
+                    "
+                ></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     OFFICER INTERPRETATION
+========================================================= -->
+
+<div class="card">
+
+    <div class="card-title">
+        👨‍💼 Analysis Summary
+    </div>
+
+
+    <div class="info-box">
+
+        {% if colour_match %}
+
+        The uploaded sample has an average RGB
+        colour of
+
+        <strong>
+            ({{ "%.2f"|format(features.red) }},
+            {{ "%.2f"|format(features.green) }},
+            {{ "%.2f"|format(features.blue) }})
+        </strong>.
+
+        The measured colour intensity is
+
+        <strong>
+            {{ "%.2f"|format(features.intensity) }}%
+        </strong>
+
+        and the red dominance is
+
+        <strong>
+            {{ "%.2f"|format(features.red_dominance) }}%
+        </strong>.
+
+        The closest colour pattern in the dataset
+        is
+
+        <strong>
+            {{ colour_match.best_match }}
+        </strong>
+
+        with a visual similarity of
+
+        <strong>
+            {{ "%.2f"|format(colour_match.confidence) }}%
+        </strong>.
+
+        {% else %}
+
+        The image colour characteristics were
+        extracted successfully, but a matching
+        dataset colour profile was not available.
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     RECOMMENDATION
+========================================================= -->
+
+{% if recommendation %}
+
+<div class="card">
+
+    <div class="card-title">
+        💡 Recommended Action
+    </div>
+
+    <div class="info-box">
+
+        {{ recommendation }}
+
+    </div>
+
+</div>
+
+{% endif %}
+
+
+{% endif %}
+
+</main>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer class="footer">
+
+    🌶️ Chilli Powder Colour Intelligence
+
+    <br>
+
+    AI-assisted visual screening system
+
+</footer>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+let cameraStream = null;
+
+
+/* ============================================================
+   FILE SELECTION
+============================================================ */
+
+function handleFileSelect(input) {
+
+    const file = input.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    showPreview(
+        file,
+        file.name
+    );
+
+}
+
+
+/* ============================================================
+   SHOW PREVIEW
+============================================================ */
+
+function showPreview(
+    file,
+    name
+) {
+
+    const previewBox =
+        document.getElementById(
+            "previewBox"
+        );
+
+    const previewImage =
+        document.getElementById(
+            "previewImage"
+        );
+
+    const fileName =
+        document.getElementById(
+            "fileName"
+        );
+
+    const analyzeButton =
+        document.getElementById(
+            "analyzeButton"
+        );
+
+
+    if (!file.type.startsWith("image/")) {
+
+        alert(
+            "Please select a valid image."
+        );
+
+        return;
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload = function(event) {
+
+        previewImage.src =
+            event.target.result;
+
+        previewBox.style.display =
+            "block";
+
+        fileName.textContent =
+            name;
+
+        analyzeButton.disabled =
+            false;
+
+    };
+
+
+    reader.readAsDataURL(file);
+
+}
+
+
+/* ============================================================
+   OPEN CAMERA
+============================================================ */
+
+async function openCamera() {
+
+    const cameraBox =
+        document.getElementById(
+            "cameraBox"
+        );
+
+    const video =
+        document.getElementById(
+            "cameraVideo"
+        );
+
+    const message =
+        document.getElementById(
+            "cameraMessage"
+        );
+
+
+    cameraBox.style.display =
+        "block";
+
+
+    try {
+
+        if (
+            !navigator.mediaDevices ||
+            !navigator.mediaDevices.getUserMedia
+        ) {
+
+            message.textContent =
+                "Camera access is not supported by this browser.";
+
+            return;
+        }
+
+
+        cameraStream =
+            await navigator.mediaDevices.getUserMedia(
+                {
+                    video: {
+                        facingMode: {
+                            ideal: "environment"
+                        }
+                    },
+
+                    audio: false
+                }
+            );
+
+
+        video.srcObject =
+            cameraStream;
+
+
+        message.textContent =
+            "Camera ready. Place the chilli powder clearly in the frame.";
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Camera error:",
+            error
+        );
+
+
+        message.textContent =
+            "Camera access was blocked. Allow camera permission and use localhost or HTTPS.";
+
+    }
+
+}
+
+
+/* ============================================================
+   CLOSE CAMERA
+============================================================ */
+
+function closeCamera() {
+
+    const cameraBox =
+        document.getElementById(
+            "cameraBox"
+        );
+
+
+    if (cameraStream) {
+
+        cameraStream
+            .getTracks()
+            .forEach(
+                track =>
+                    track.stop()
+            );
+
+        cameraStream =
+            null;
+    }
+
+
+    document.getElementById(
+        "cameraVideo"
+    ).srcObject =
+        null;
+
+
+    cameraBox.style.display =
+        "none";
+
+}
+
+
+/* ============================================================
+   CAPTURE CAMERA IMAGE
+============================================================ */
+
+function captureImage() {
+
+    const video =
+        document.getElementById(
+            "cameraVideo"
+        );
+
+    const canvas =
+        document.getElementById(
+            "captureCanvas"
+        );
+
+
+    if (
+        !video.videoWidth ||
+        !video.videoHeight
+    ) {
+
+        alert(
+            "Camera is not ready yet."
+        );
+
+        return;
+    }
+
+
+    canvas.width =
+        video.videoWidth;
+
+    canvas.height =
+        video.videoHeight;
+
+
+    const context =
+        canvas.getContext(
+            "2d"
+        );
+
+
+    context.drawImage(
+        video,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    canvas.toBlob(
+        function(blob) {
+
+            if (!blob) {
+
+                alert(
+                    "Could not capture image."
+                );
+
+                return;
+            }
+
+
+            const file =
+                new File(
+                    [blob],
+                    "camera_capture.jpg",
+                    {
+                        type:
+                            "image/jpeg"
+                    }
+                );
+
+
+            /*
+             * Put the captured image into
+             * the file input so Flask receives
+             * it exactly like an uploaded image.
+             */
+
+            const dataTransfer =
+                new DataTransfer();
+
+
+            dataTransfer.items.add(
+                file
+            );
+
+
+            document.getElementById(
+                "imageInput"
+            ).files =
+                dataTransfer.files;
+
+
+            showPreview(
+                file,
+                "Camera captured image"
+            );
+
+
+            closeCamera();
+
+        },
+        "image/jpeg",
+        0.92
+    );
+
+}
+
+
+/* ============================================================
+   FORM SUBMISSION
+============================================================ */
+
+document
+    .getElementById(
+        "analysisForm"
+    )
+    .addEventListener(
+        "submit",
+        function() {
+
+            const input =
+                document.getElementById(
+                    "imageInput"
+                );
+
+
+            if (
+                !input.files ||
+                !input.files.length
+            ) {
+
+                alert(
+                    "Please upload or capture an image first."
+                );
+
+                return false;
+            }
+
+
+            document.getElementById(
+                "loading"
+            ).style.display =
+                "block";
+
+
+            document.getElementById(
+                "analyzeButton"
+            ).disabled =
+                true;
+
+        }
+    );
+
+
+/* ============================================================
+   STOP CAMERA WHEN PAGE IS LEFT
+============================================================ */
+
+window.addEventListener(
+    "beforeunload",
+    function() {
+
+        if (cameraStream) {
+
+            cameraStream
+                .getTracks()
+                .forEach(
+                    track =>
+                        track.stop()
+                );
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
